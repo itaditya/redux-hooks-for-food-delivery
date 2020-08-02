@@ -1,0 +1,20 @@
+[
+  {
+    "id": "SN",
+    "label": "Schezwan Noodles",
+    "description": "Spicy Noodles soaked in Schezwan sauce and topped with exotic herbs",
+    "price": 4
+  },
+  {
+    "id": "CP",
+    "label": "Chicken Pizza",
+    "description": "Spicy Noodles soaked in Schezwan sauce and topped with exotic herbs",
+    "price": 10
+  },
+  {
+    "id": "FF",
+    "label": "French Fries",
+    "description": "Spicy Noodles soaked in Schezwan sauce and topped with exotic herbs",
+    "price": 6
+  }
+]
