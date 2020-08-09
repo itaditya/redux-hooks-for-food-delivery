@@ -29,7 +29,7 @@ export function MenuItem(props) {
           >
             <IconMinus />
           </button>
-          <div className="menu-item-qty">{quantity}</div>
+          <div className="menu-item-qty" role="status" aria-live="polite">{quantity}</div>
           <button
             aria-label={`Add ${item.label} to cart`}
             className="menu-btn-item"
@@ -89,20 +89,33 @@ export function IconMinus() {
 export function Message(props) {
   const { status } = props;
 
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (status === 'failed') {
-    return (
-      <div>
-        Menu failed to load. <br />
+  const messages = {
+    loading: 'Loading...',
+    failed: (
+      <>
+        Menu failed to load.
+        <br />
         Please try again...
-      </div>
-    );
+      </>
+    ),
+  };
+
+  const messageText = messages[status];
+
+  if (!messageText) {
+    return null;
   }
 
-  return null;
+  return (
+    <div
+      className={`message-${status}`}
+      role={status === 'failed' ? 'alert' : 'status'}
+      aria-live="polite"
+      aria-busy={status === 'loading'}
+    >
+      {messageText}
+    </div>
+  );
 }
 
 export function PayButton(props) {
