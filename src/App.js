@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { selectorMenu, selectorCartPrice, ACTIONS } from './redux';
-import { MenuItem, Message, PayButton } from './UIComps';
+import { MenuItem, Message, ButtonPay } from './UIComps';
 import { loadFoodData } from './utils';
 
 export default function App() {
@@ -73,7 +73,7 @@ export default function App() {
             </ul>
           </main>
           <footer className="food-app-footer">
-            {cartPrice > 0 && <PayButton cartPrice={cartPrice} />}
+            {cartPrice > 0 && <ButtonPay cartPrice={cartPrice} />}
           </footer>
         </Fragment>
       )}

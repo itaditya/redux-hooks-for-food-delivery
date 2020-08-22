@@ -118,7 +118,7 @@ export function Message(props) {
   );
 }
 
-export function PayButton(props) {
+export function ButtonPay(props) {
   const { cartPrice } = props;
   return (
     <a href="#payment" className="food-app-pay-btn" aria-live="polite">
