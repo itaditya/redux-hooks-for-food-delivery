@@ -88,11 +88,10 @@ export function selectorMenu(state) {
 
   return {
     menuList,
-    menuByIds,
   };
 }
 
-export function selectorCart(state) {
+export function selectorCartPrice(state) {
   const { cartByIds, menuByIds } = state;
   let cartPrice = 0;
 
@@ -105,7 +104,5 @@ export function selectorCart(state) {
     cartPrice += price;
   });
 
-  return {
-    cartPrice,
-  };
+  return cartPrice;
 }

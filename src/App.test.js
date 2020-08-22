@@ -47,7 +47,7 @@ describe('Test App', () => {
           price: 4,
         },
         {
-          id: 'CP',
+          id: 'MP',
           label: 'Mushroom Pizza',
           description: 'Description of Pizza',
           price: 10,

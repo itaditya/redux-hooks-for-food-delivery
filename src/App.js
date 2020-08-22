@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { selectorMenu, selectorCart, ACTIONS } from './redux';
+import { selectorMenu, selectorCartPrice, ACTIONS } from './redux';
 import { MenuItem, Message, PayButton } from './UIComps';
 import { loadFoodData } from './utils';
 
@@ -9,8 +9,8 @@ export default function App() {
   const [stateAPIStatus, setAPIStatus] = useState('idle');
 
   const cartByIds = useSelector((state) => state.cartByIds);
-  const { cartPrice } = useSelector(selectorCart);
   const { menuList } = useSelector(selectorMenu);
+  const cartPrice = useSelector(selectorCartPrice);
   const dispatch = useDispatch();
 
   useEffect(() => {
