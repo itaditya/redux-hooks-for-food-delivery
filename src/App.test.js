@@ -10,6 +10,22 @@ import * as utils from './utils';
 
 jest.mock('./utils');
 
+const loadFoodData = [
+  {
+    id: 'SM',
+    label: 'Sausage McMuffin',
+    description: 'Description of McMuffin',
+    price: 12,
+  },
+  {
+    id: 'MP',
+    label: 'Mushroom Pizza',
+    diet: 'veg',
+    description: 'Description of Pizza',
+    price: 20,
+  },
+];
+
 describe('Test App', () => {
   let syncPromise;
 
@@ -39,34 +55,21 @@ describe('Test App', () => {
 
     act(() => {
       // finish the API loading successfully
-      syncPromise.resolve([
-        {
-          id: 'SN',
-          label: 'Schezwan Noodles',
-          description: 'Description of Noodles',
-          price: 4,
-        },
-        {
-          id: 'MP',
-          label: 'Mushroom Pizza',
-          description: 'Description of Pizza',
-          price: 10,
-        },
-      ]);
+      syncPromise.resolve(loadFoodData);
     });
 
     // on success, show menu
-    expect(screen.getByText(/Schezwan Noodles/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sausage McMuffin/i)).toBeInTheDocument();
     expect(screen.getByText(/Mushroom Pizza/i)).toBeInTheDocument();
     expect(screen.queryByRole('link', {name: /Pay for food/i})).toBe(null);
 
 
     // add Noodles to cart once
-    fireEvent.click(screen.getByRole('button', {name: /Add Schezwan Noodles to cart/i}));
+    fireEvent.click(screen.getByRole('button', {name: /Add Sausage McMuffin to cart/i}));
 
     // check that the quantity of Noodles & cart price is shown.
     expect(screen.getByRole('status')).toHaveTextContent(1);
-    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($4)');
+    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($12)');
 
 
     // add more items to cart
@@ -75,7 +78,7 @@ describe('Test App', () => {
 
     // check the quantity of Pizza is shown & cart price is updated
     expect(screen.getAllByRole('status')[1]).toHaveTextContent(2);
-    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($24)');
+    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($52)');
 
 
     // remove Pizza from cart
@@ -84,7 +87,29 @@ describe('Test App', () => {
     // on removing an item, show the updated quantities & price.
     expect(screen.getAllByRole('status')[0]).toHaveTextContent(1);
     expect(screen.getAllByRole('status')[1]).toHaveTextContent(1);
-    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($14)');
+    expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($32)');
+  });
+
+  test('only show veg food when veg filter is applied', async () => {
+    renderApp();
+
+    act(() => {
+      // finish the API loading successfully
+      syncPromise.resolve(loadFoodData);
+    });
+
+    // enable Veg Only filter
+    fireEvent.click(screen.getByRole('checkbox', {name: /Veg Only/i}));
+
+    expect(screen.queryByText(/Sausage McMuffin/i)).toBe(null);
+    expect(screen.getByText(/Mushroom Pizza/i)).toBeInTheDocument();
+
+
+    // disable Veg Only filter
+    fireEvent.click(screen.getByRole('checkbox', {name: /Veg Only/i}));
+
+    expect(screen.getByText(/Sausage McMuffin/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mushroom Pizza/i)).toBeInTheDocument();
   });
 
   it('shows error if API fails', () => {

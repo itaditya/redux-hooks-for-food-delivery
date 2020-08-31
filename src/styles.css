@@ -35,7 +35,14 @@ ol {
   background-color: #fffaf0;
 }
 
-.food-app-footer {
+.food-app > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.food-app > footer {
   position: fixed;
   bottom: 0;
   padding: 30px 20px;

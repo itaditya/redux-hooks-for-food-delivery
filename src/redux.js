@@ -1,32 +1,49 @@
 import { createStore } from 'redux';
 
 export const ACTIONS = {
+  CHANGE_DIET: 'CHANGE_DIET',
   LOAD_MENU: 'LOAD_MENU',
   ADD_TO_CART: 'ADD_TO_CART',
   REMOVE_FROM_CART: 'REMOVE_FROM_CART',
 };
 
 const initialState = {
-  menuByIds: {},
-  allMenuIds: [],
+  diet: 'all',
+  menuById: {},
+  menuIdList: {
+    all: [],
+    veg: [],
+  },
   cartByIds: {},
 };
 
 function foodReducer(state = initialState, action) {
   switch (action.type) {
+    case ACTIONS.CHANGE_DIET: {
+      const { diet } = action.payload;
+      return {
+        ...state,
+        diet,
+        cartByIds: {},
+      };
+    }
     case ACTIONS.LOAD_MENU: {
       const { menu } = action.payload;
 
-      const menuByIds = {};
+      const menuById = {};
       menu.forEach((item) => {
-        menuByIds[item.id] = item;
+        menuById[item.id] = item;
       });
-      const allMenuIds = menu.map((item) => item.id);
+      const allMenuId = menu.map((item) => item.id);
+      const vegMenuId = menu.filter((item) => item.diet === 'veg').map((item) => item.id);
 
       return {
         ...state,
-        menuByIds,
-        allMenuIds,
+        menuById,
+        menuIdList: {
+          all: allMenuId,
+          veg: vegMenuId,
+        },
       };
     }
     case ACTIONS.ADD_TO_CART: {
@@ -76,33 +93,6 @@ function foodReducer(state = initialState, action) {
   }
 }
 
-export const store = createStore(foodReducer);
+const enableReduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.();
 
-export function selectorMenu(state) {
-  const { allMenuIds, menuByIds } = state;
-  const menuList = [];
-
-  allMenuIds.forEach((id) => {
-    menuList.push(menuByIds[id]);
-  });
-
-  return {
-    menuList,
-  };
-}
-
-export function selectorCartPrice(state) {
-  const { cartByIds, menuByIds } = state;
-  let cartPrice = 0;
-
-  const cartKeys = Object.keys(cartByIds);
-  cartKeys.forEach((id) => {
-    const item = menuByIds[id];
-    const cartItem = cartByIds[id];
-
-    const price = cartItem.quantity * item.price;
-    cartPrice += price;
-  });
-
-  return cartPrice;
-}
+export const store = createStore(foodReducer, enableReduxDevTools);

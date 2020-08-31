@@ -9,7 +9,7 @@ I have kept things simple for this toy app. All the relevant code for the post i
 2. App.js - Entry point for our React app.
 3. App.test.js - Tests for the app.
 4. redux.js - Redux related logic like reducer, store, selectors.
-5. UIComps.js - Presentational React Components like list item, icons, buttons etc.
+5. Comps.js - React Components like list item, buttons, icons etc.
 6. utils.js - Random JS utilities like api fetching wrappers.
 
 The food app loads the menu list from a static `public/food-menu.json` file. In real apps data would be fetched from an API server.
