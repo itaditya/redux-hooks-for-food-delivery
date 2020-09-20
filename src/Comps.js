@@ -88,7 +88,7 @@ export function MenuItem(props) {
 }
 
 function PureMenuList(props) {
-  console.log('re-render');
+  console.log('MenuList Re-Render');
   const { menuList } = props;
   return (
     <ul className="menu-list">

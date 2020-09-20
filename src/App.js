@@ -12,8 +12,8 @@ export default function App() {
   const stateAPIStatus = useLoadFoodData();
   const menuList = useSelector(selectorMenu, shallowEqual);
 
-  React.useEffect(() => {
-    console.log('hello');
+  useEffect(() => {
+    console.log('SERVER_EVENT: menu list changed');
   }, [menuList]);
 
   function handleVegToggle() {
