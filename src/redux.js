@@ -20,10 +20,12 @@ const initialState = {
 function foodReducer(state = initialState, action) {
   switch (action.type) {
     case ACTIONS.CHANGE_DIET: {
-      const { diet } = action.payload;
+      const { diet } = state;
+      const newDiet = diet === 'veg' ? 'all' : 'veg';
+
       return {
         ...state,
-        diet,
+        diet: newDiet,
         cartByIds: {},
       };
     }

@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 
 import { ACTIONS } from './redux';
-import { MenuList, MenuItem, Message, PaymentFooter } from './Comps';
+import { MenuList, Message, PaymentFooter } from './Comps';
 import { loadFoodData } from './utils';
 
 export default function App() {
@@ -19,9 +19,6 @@ export default function App() {
   function handleVegToggle() {
     dispatch({
       type: ACTIONS.CHANGE_DIET,
-      payload: {
-        diet: diet === 'veg' ? 'all' : 'veg',
-      },
     });
   }
 
@@ -47,18 +44,6 @@ export default function App() {
   );
 }
 
-function selectorMenu(state) {
-  const { diet, menuIdList, menuById } = state;
-  const menuId = menuIdList[diet];
-  const menuList = [];
-
-  menuId.forEach((id) => {
-    menuList.push(menuById[id]);
-  });
-
-  return menuList;
-}
-
 function useLoadFoodData() {
   const [stateAPIStatus, setAPIStatus] = useState('idle');
   const dispatch = useDispatch();
@@ -81,4 +66,16 @@ function useLoadFoodData() {
   }, [dispatch]);
 
   return stateAPIStatus;
+}
+
+function selectorMenu(state) {
+  const { diet, menuIdList, menuById } = state;
+  const menuId = menuIdList[diet];
+  const menuList = [];
+
+  menuId.forEach((id) => {
+    menuList.push(menuById[id]);
+  });
+
+  return menuList;
 }
