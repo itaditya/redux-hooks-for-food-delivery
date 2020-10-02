@@ -1,18 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 
 import App from './App';
-import { createReduxStore } from './redux';
+import { RootStore, RootStoreProvider } from './mobx';
 
 import './styles.css';
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={createReduxStore()}>
+    <RootStoreProvider value={new RootStore()}>
       <App />
-    </Provider>
+    </RootStoreProvider>
   </React.StrictMode>,
   rootElement,
 );
