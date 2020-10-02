@@ -11,20 +11,20 @@ export function MenuItem(props) {
 
   const quantity = cartByIds[item.id]?.quantity ?? 0;
 
-  function handleIncrement(id) {
+  function handleIncrement() {
     dispatch({
       type: ACTIONS.ADD_TO_CART,
       payload: {
-        itemId: id,
+        itemId: item.id,
       },
     });
   }
 
-  function handleDecrement(id) {
+  function handleDecrement() {
     dispatch({
       type: ACTIONS.REMOVE_FROM_CART,
       payload: {
-        itemId: id,
+        itemId: item.id,
       },
     });
   }
@@ -33,7 +33,7 @@ export function MenuItem(props) {
     <button
       aria-label={`Add ${item.label} to cart`}
       className="menu-btn-add"
-      onClick={() => handleIncrement(item.id)}
+      onClick={handleIncrement}
     >
       Add <IconPlus />
     </button>
@@ -43,7 +43,7 @@ export function MenuItem(props) {
     <button
       aria-label={`Add ${item.label} to cart`}
       className="menu-btn-item"
-      onClick={() => handleIncrement(item.id)}
+      onClick={handleIncrement}
     >
       <IconPlus />
     </button>
@@ -53,7 +53,7 @@ export function MenuItem(props) {
     <button
       aria-label={`Remove ${item.label} from cart`}
       className="menu-btn-item"
-      onClick={() => handleDecrement(item.id)}
+      onClick={handleDecrement}
     >
       <IconMinus />
     </button>
