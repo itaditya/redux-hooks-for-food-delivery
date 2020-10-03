@@ -27,7 +27,13 @@ export default function App() {
       <header>
         <h1>Ordux</h1>
         <label>
-          <input type="checkbox" name="veg-checkbox" value={diet} onChange={handleVegToggle} />
+          <input
+            type="checkbox"
+            name="veg-checkbox"
+            value={diet}
+            checked={diet === 'veg'}
+            onChange={handleVegToggle}
+          />
           Veg Only
         </label>
       </header>
