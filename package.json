@@ -15,14 +15,19 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.2",
     "@testing-library/react": "^10.4.7",
+    "cypress": "^5.3.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "serve": "^11.3.2",
     "synchronous-promise": "^2.0.13"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "serve -s -l 8232 build",
+    "cy:open": "CYPRESS_BASE_URL=http://localhost:3000 cypress open",
+    "cy:run": "CYPRESS_BASE_URL=http://localhost:3000 cypress run"
   },
   "browserslist": [
     ">0.2%",
