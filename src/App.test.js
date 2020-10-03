@@ -50,7 +50,7 @@ describe('Test App', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Loading...');
   });
 
-  test('display menu & show price when items are added', async () => {
+  test('display menu & show price when items are added', () => {
     renderApp();
 
     act(() => {
@@ -64,10 +64,10 @@ describe('Test App', () => {
     expect(screen.queryByRole('link', {name: /Pay for food/i})).toBe(null);
 
 
-    // add Noodles to cart once
+    // add Sausage to cart once
     fireEvent.click(screen.getByRole('button', {name: /Add Sausage McMuffin to cart/i}));
 
-    // check that the quantity of Noodles & cart price is shown.
+    // check that the quantity of Sausage & cart price is shown.
     expect(screen.getByRole('status')).toHaveTextContent(1);
     expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($12)');
 
@@ -90,7 +90,7 @@ describe('Test App', () => {
     expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($32)');
   });
 
-  test('only show veg food when veg filter is applied', async () => {
+  test('only show veg food when veg filter is applied', () => {
     renderApp();
 
     act(() => {
