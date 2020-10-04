@@ -29,8 +29,7 @@ const loadFoodData = [
 describe('Test App', () => {
   let syncPromise;
 
-  function renderApp(props = {}) {
-    const store = createReduxStore();
+  function renderApp(store = createReduxStore(), props = {}) {
     return render(
       <Provider store={store}>
         <App {...props} />

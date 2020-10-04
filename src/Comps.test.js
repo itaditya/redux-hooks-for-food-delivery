@@ -25,7 +25,7 @@ const loadFoodData = [
 describe('Test PaymentFooter', () => {
   const cartIds = ['SM', 'SM', 'MP'];
 
-  function renderPaymentFooter(store, props = {}) {
+  function renderPaymentFooter(store = createReduxStore(), props = {}) {
     return render(
       <Provider store={store}>
         <PaymentFooter {...props} />
