@@ -97,4 +97,7 @@ function foodReducer(state = initialState, action) {
 
 const enableReduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.();
 
-export const store = createStore(foodReducer, enableReduxDevTools);
+export function createReduxStore() {
+  const store = createStore(foodReducer, enableReduxDevTools);
+  return store;
+}

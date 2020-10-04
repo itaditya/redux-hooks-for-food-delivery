@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { PaymentFooter } from './Comps';
-import { store, ACTIONS } from './redux';
+import { createReduxStore, ACTIONS } from './redux';
 
 const loadFoodData = [
   {
@@ -23,10 +23,9 @@ const loadFoodData = [
 ];
 
 describe('Test PaymentFooter', () => {
-  const { dispatch } = store;
   const cartIds = ['SM', 'SM', 'MP'];
 
-  function renderPaymentFooter(props = {}) {
+  function renderPaymentFooter(store = createReduxStore(), props = {}) {
     return render(
       <Provider store={store}>
         <PaymentFooter {...props} />
@@ -34,15 +33,15 @@ describe('Test PaymentFooter', () => {
     );
   }
 
-  const addItemsInStore = () => {
-    dispatch({
+  const addItemsInStore = (store) => {
+    store.dispatch({
       type: ACTIONS.LOAD_MENU,
       payload: {
         menu: loadFoodData,
       },
     });
     cartIds.forEach((id) => {
-      dispatch({
+      store.dispatch({
         type: ACTIONS.ADD_TO_CART,
         payload: {
           itemId: id,
@@ -51,9 +50,9 @@ describe('Test PaymentFooter', () => {
     });
   };
 
-  const resetMenu = () => {
+  const resetMenu = (store) => {
     cartIds.forEach((id) => {
-      dispatch({
+      store.dispatch({
         type: ACTIONS.REMOVE_FROM_CART,
         payload: {
           itemId: id,
@@ -63,12 +62,13 @@ describe('Test PaymentFooter', () => {
   };
 
   test('payment footer shows cart price when items present in cart', () => {
-    addItemsInStore();
-    renderPaymentFooter();
+    const store = createReduxStore();
+    addItemsInStore(store);
+    renderPaymentFooter(store);
 
     expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($44)');
 
-    resetMenu();
+    resetMenu(store);
     expect(screen.queryByRole('link', {name: /Pay for food/i})).toBe(null);
   });
 });
