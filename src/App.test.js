@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { SynchronousPromise } from 'synchronous-promise';
 
 import App from './App';
-import { store } from './redux';
+import { createReduxStore } from './redux';
 import * as utils from './utils';
 
 jest.mock('./utils');
@@ -30,6 +30,7 @@ describe('Test App', () => {
   let syncPromise;
 
   function renderApp(props = {}) {
+    const store = createReduxStore();
     return render(
       <Provider store={store}>
         <App {...props} />
