@@ -67,7 +67,7 @@ function useLoadFoodData() {
         setAPIStatus('success');
       })
       .catch((error) => {
-        setAPIStatus('failed');
+        setAPIStatus('error');
       });
   }, [dispatch]);
 

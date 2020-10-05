@@ -106,7 +106,7 @@ export function Message(props) {
 
   const messages = {
     loading: 'Loading...',
-    failed: (
+    error: (
       <>
         Menu failed to load.
         <br />
@@ -124,7 +124,7 @@ export function Message(props) {
   return (
     <div
       className={`message-${status}`}
-      role={status === 'failed' ? 'alert' : 'status'}
+      role={status === 'error' ? 'alert' : 'status'}
       aria-live="polite"
       aria-busy={status === 'loading'}
     >
