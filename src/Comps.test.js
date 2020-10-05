@@ -67,7 +67,6 @@ describe('Test PaymentFooter', () => {
 
   test('payment footer shows cart price when items present in cart', () => {
     const queryCache = createQueryCache();
-
     addItemsInStore(queryCache);
     renderPaymentFooter(queryCache);
 
