@@ -1,18 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 
 import App from './App';
-import { createReduxStore } from './redux';
 
 import './styles.css';
+
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      staleTime: 300000, // 5 minutes
+    },
+  },
+});
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={createReduxStore()}>
+    <ReactQueryCacheProvider queryCache={queryCache}>
       <App />
-    </Provider>
+    </ReactQueryCacheProvider>
   </React.StrictMode>,
   rootElement,
 );

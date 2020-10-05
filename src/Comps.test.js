@@ -1,10 +1,10 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { render, screen } from '@testing-library/react';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { PaymentFooter } from './Comps';
-import { createReduxStore, ACTIONS } from './redux';
+import { useCartStore } from './zustand';
 
 const foodData = [
   {
@@ -23,52 +23,57 @@ const foodData = [
 ];
 
 describe('Test PaymentFooter', () => {
-  const cartIds = ['SM', 'SM', 'MP'];
+  function createQueryCache(queryConfig) {
+    const queryCache = new QueryCache({
+      defaultConfig: queryConfig || {
+        queries: {
+          retry: false,
+        },
+      },
+    });
 
-  function renderPaymentFooter(store = createReduxStore(), props = {}) {
+    return queryCache;
+  }
+
+  function renderPaymentFooter(queryCache = createQueryCache(), props = {}) {
     return render(
-      <Provider store={store}>
+      <ReactQueryCacheProvider queryCache={queryCache}>
         <PaymentFooter {...props} />
-      </Provider>,
+      </ReactQueryCacheProvider>,
     );
   }
 
-  const addItemsInStore = (store) => {
-    store.dispatch({
-      type: ACTIONS.LOAD_MENU,
-      payload: {
-        menu: foodData,
-      },
-    });
-    cartIds.forEach((id) => {
-      store.dispatch({
-        type: ACTIONS.ADD_TO_CART,
-        payload: {
-          itemId: id,
+  const addItemsInStore = (queryCache) => {
+    queryCache.setQueryData('menu', foodData);
+    useCartStore.setState({
+      cartByIds: {
+        SM: {
+          quantity: 2,
         },
-      });
+        MP: {
+          quantity: 1,
+        },
+      }
     });
   };
 
-  const resetMenu = (store) => {
-    cartIds.forEach((id) => {
-      store.dispatch({
-        type: ACTIONS.REMOVE_FROM_CART,
-        payload: {
-          itemId: id,
-        },
+  const resetMenu = () => {
+    act(() => {
+      useCartStore.setState({
+        cartByIds: {},
       });
-    });
+    })
   };
 
   test('payment footer shows cart price when items present in cart', () => {
-    const store = createReduxStore();
-    addItemsInStore(store);
-    renderPaymentFooter(store);
+    const queryCache = createQueryCache();
+
+    addItemsInStore(queryCache);
+    renderPaymentFooter(queryCache);
 
     expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($44)');
 
-    resetMenu(store);
+    resetMenu();
     expect(screen.queryByRole('link', {name: /Pay for food/i})).toBe(null);
   });
 });

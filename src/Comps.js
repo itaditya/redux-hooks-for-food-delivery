@@ -1,32 +1,20 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
-import { ACTIONS } from './redux';
+import { useCartStore } from './zustand';
+import { useCartPrice } from './hooks';
 
 export function MenuItem(props) {
   const { item } = props;
-
-  const cartByIds = useSelector((state) => state.cartByIds);
-  const dispatch = useDispatch();
+  const { cartByIds, addToCart, removeFromCart } = useCartStore();
 
   const quantity = cartByIds[item.id]?.quantity ?? 0;
 
   function handleIncrement() {
-    dispatch({
-      type: ACTIONS.ADD_TO_CART,
-      payload: {
-        itemId: item.id,
-      },
-    });
+    addToCart(item.id);
   }
 
   function handleDecrement() {
-    dispatch({
-      type: ACTIONS.REMOVE_FROM_CART,
-      payload: {
-        itemId: item.id,
-      },
-    });
+    removeFromCart(item.id);
   }
 
   const addBtn = (
@@ -133,25 +121,9 @@ export function Message(props) {
   );
 }
 
-function selectorCartPrice(state) {
-  const { cartByIds, menuById } = state;
-  let cartPrice = 0;
-
-  const cartKeys = Object.keys(cartByIds);
-  cartKeys.forEach((id) => {
-    const item = menuById[id];
-    const cartItem = cartByIds[id];
-
-    const price = cartItem.quantity * item.price;
-    cartPrice += price;
-  });
-
-  return cartPrice;
-}
-
 
 export function PaymentFooter() {
-  const cartPrice = useSelector(selectorCartPrice);
+  const cartPrice = useCartPrice();
 
   return (
     <footer>
