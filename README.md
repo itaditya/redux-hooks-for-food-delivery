@@ -1,6 +1,6 @@
-## Food delivery app with Redux Hooks
+## Food delivery app with React Query & Zustand
 
-This repo is used in my blog post to show how to test a React app built using Redux hooks. The tests are written with **@testing-library/react**.
+This repo is used in my blog post to show how to test a React app built using React Query & Zustand. The tests are written with **@testing-library/react**.
 
 #### Project Structure-
 I have kept things simple for this toy app. All the relevant code for the post is in `src`. Here's what each file contains-
