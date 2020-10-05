@@ -18,8 +18,7 @@
     "@testing-library/react": "^10.4.7",
     "cypress": "^5.3.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "serve": "^11.3.2",
-    "synchronous-promise": "^2.0.13"
+    "serve": "^11.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
