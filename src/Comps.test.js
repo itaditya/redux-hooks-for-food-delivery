@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { PaymentFooter } from './Comps';
 import { createReduxStore, ACTIONS } from './redux';
 
-const loadFoodData = [
+const foodData = [
   {
     id: 'SM',
     label: 'Sausage McMuffin',
@@ -37,7 +37,7 @@ describe('Test PaymentFooter', () => {
     store.dispatch({
       type: ACTIONS.LOAD_MENU,
       payload: {
-        menu: loadFoodData,
+        menu: foodData,
       },
     });
     cartIds.forEach((id) => {

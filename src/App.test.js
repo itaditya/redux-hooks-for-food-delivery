@@ -1,8 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { render, fireEvent, screen, act } from '@testing-library/react';
+import { render, fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { SynchronousPromise } from 'synchronous-promise';
 
 import App from './App';
 import { createReduxStore } from './redux';
@@ -10,7 +9,7 @@ import * as utils from './utils';
 
 jest.mock('./utils');
 
-const loadFoodData = [
+const foodData = [
   {
     id: 'SM',
     label: 'Sausage McMuffin',
@@ -27,8 +26,6 @@ const loadFoodData = [
 ];
 
 describe('Test App', () => {
-  let syncPromise;
-
   function renderApp(store = createReduxStore(), props = {}) {
     return render(
       <Provider store={store}>
@@ -38,25 +35,26 @@ describe('Test App', () => {
   }
 
   beforeEach(() => {
-    syncPromise = SynchronousPromise.unresolved();
-    utils.loadFoodData.mockImplementation(() => syncPromise);
+    utils.loadFoodData.mockImplementation(() => Promise.resolve(foodData));
   });
 
-  test('show loading indicator till API responds', () => {
+  afterEach(() => {
+    utils.loadFoodData.mockRestore();
+  });
+
+  test('show loading indicator till API responds', async () => {
     renderApp();
 
     // during loading, show app name and loading indicator
     expect(screen.getByRole('heading')).toHaveTextContent('Ordux');
     expect(screen.getByRole('status')).toHaveTextContent('Loading...');
+
+    await waitForElementToBeRemoved(() => screen.getByText(/Loading/i));
   });
 
-  test('display menu & show price when items are added', () => {
+  test('display menu & show price when items are added', async () => {
     renderApp();
-
-    act(() => {
-      // finish the API loading successfully
-      syncPromise.resolve(loadFoodData);
-    });
+    await waitForElementToBeRemoved(() => screen.getByText(/Loading/i));
 
     // on success, show menu
     expect(screen.getByText(/Sausage McMuffin/i)).toBeInTheDocument();
@@ -90,13 +88,9 @@ describe('Test App', () => {
     expect(screen.getByRole('link', {name: /Pay for food/i})).toHaveTextContent('Pay for food ($32)');
   });
 
-  test('only show veg food when veg filter is applied', () => {
+  test('only show veg food when veg filter is applied', async () => {
     renderApp();
-
-    act(() => {
-      // finish the API loading successfully
-      syncPromise.resolve(loadFoodData);
-    });
+    await waitForElementToBeRemoved(() => screen.getByText(/Loading/i));
 
     // enable Veg Only filter
     fireEvent.click(screen.getByRole('checkbox', {name: /Veg Only/i}));
@@ -112,13 +106,10 @@ describe('Test App', () => {
     expect(screen.getByText(/Mushroom Pizza/i)).toBeInTheDocument();
   });
 
-  it('shows error if API fails', () => {
+  it('shows error if API fails', async () => {
+    utils.loadFoodData.mockImplementation(() => Promise.reject());
     renderApp();
-
-    act(() => {
-      // API returns error
-      syncPromise.reject();
-    });
+    await waitForElementToBeRemoved(() => screen.getByText(/Loading/i));
 
     expect(screen.getByRole('alert')).toHaveTextContent('Menu failed to load.Please try again...');
   });
