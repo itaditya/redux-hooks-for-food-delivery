@@ -14,10 +14,10 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-build-
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Test
         run: npm test -- --colors
