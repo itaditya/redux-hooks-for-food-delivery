@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import { useDietStore, useCartStore } from './zustand';
@@ -11,16 +12,19 @@ export function useLoadFoodQuery() {
 export function useMenuList() {
   const diet = useDietStore((state) => state.diet);
   const menuQuery = useLoadFoodQuery();
-
   const data = menuQuery.data || [];
 
-  const menuList = data.filter((item) => {
-    if (diet === 'all') {
-      return item;
-    }
+  const menuList = useMemo(() => {
+    const computeMenuList = data.filter((item) => {
+      if (diet === 'all') {
+        return item;
+      }
 
-    return item.diet === diet;
-  });
+      return item.diet === diet;
+    });
+
+    return computeMenuList;
+  }, [diet, data]);
 
   return menuList;
 }
@@ -29,11 +33,15 @@ export function useCartPrice() {
   const cartByIds = useCartStore((state) => state.cartByIds);
   const menuList = useMenuList();
 
-  let cartPrice = 0;
-  menuList.forEach((item) => {
-    const cartItem = cartByIds[item.id] || { quantity: 0 };
-    cartPrice += item.price * cartItem.quantity;
-  });
+  const cartPrice = useMemo(() => {
+    let cartPrice = 0;
+    menuList.forEach((item) => {
+      const cartItem = cartByIds[item.id] || { quantity: 0 };
+      cartPrice += item.price * cartItem.quantity;
+    });
+
+    return cartPrice;
+  }, [cartByIds, menuList]);
 
   return cartPrice;
 }
