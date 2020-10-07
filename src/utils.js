@@ -7,3 +7,7 @@ export async function loadFoodData() {
   const data = await res.json();
   return data;
 }
+
+export function hello() {
+  
+}
