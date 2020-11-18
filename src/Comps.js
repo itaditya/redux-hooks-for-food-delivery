@@ -1,32 +1,19 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { observer } from 'mobx-react-lite';
 
-import { ACTIONS } from './redux';
+import { useRootStore } from './mobx';
 
-export function MenuItem(props) {
+export const MenuItem = observer(function MenuItem(props) {
   const { item } = props;
-
-  const cartByIds = useSelector((state) => state.cartByIds);
-  const dispatch = useDispatch();
-
-  const quantity = cartByIds[item.id]?.quantity ?? 0;
+  const { quantity } = item;
+  const rootStore = useRootStore();
 
   function handleIncrement() {
-    dispatch({
-      type: ACTIONS.ADD_TO_CART,
-      payload: {
-        itemId: item.id,
-      },
-    });
+    rootStore.addToCart(item);
   }
 
   function handleDecrement() {
-    dispatch({
-      type: ACTIONS.REMOVE_FROM_CART,
-      payload: {
-        itemId: item.id,
-      },
-    });
+    rootStore.removeFromCart(item);
   }
 
   const addBtn = (
@@ -85,11 +72,12 @@ export function MenuItem(props) {
       )}
     </li>
   );
-}
+});
 
-function PureMenuList(props) {
-  console.log('MenuList Re-Render');
-  const { menuList } = props;
+export const MenuList = observer(function MenuList() {
+  const rootStore = useRootStore();
+  const { menuList } = rootStore;
+
   return (
     <ul className="menu-list">
       {menuList.map((item) => (
@@ -97,9 +85,7 @@ function PureMenuList(props) {
       ))}
     </ul>
   );
-}
-
-export const MenuList = React.memo(PureMenuList);
+});
 
 export function Message(props) {
   const { status } = props;
@@ -133,25 +119,10 @@ export function Message(props) {
   );
 }
 
-function selectorCartPrice(state) {
-  const { cartByIds, menuById } = state;
-  let cartPrice = 0;
 
-  const cartKeys = Object.keys(cartByIds);
-  cartKeys.forEach((id) => {
-    const item = menuById[id];
-    const cartItem = cartByIds[id];
-
-    const price = cartItem.quantity * item.price;
-    cartPrice += price;
-  });
-
-  return cartPrice;
-}
-
-
-export function PaymentFooter() {
-  const cartPrice = useSelector(selectorCartPrice);
+export const PaymentFooter = observer(function PaymentFooter() {
+  const rootStore = useRootStore();
+  const { cartPrice } = rootStore;
 
   return (
     <footer>
@@ -162,7 +133,7 @@ export function PaymentFooter() {
       )}
     </footer>
   );
-}
+});
 
 // source- https://feathericons.com/
 export function IconPlus() {

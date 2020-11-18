@@ -1,25 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { observer } from 'mobx-react-lite';
 
-import { ACTIONS } from './redux';
+import { useRootStore } from './mobx';
 import { MenuList, Message, PaymentFooter } from './Comps';
 import { loadFoodData } from './utils';
 
-export default function App() {
-  const diet = useSelector((state) => state.diet);
-  const dispatch = useDispatch();
-
+const App = observer(function App() {
+  const rootStore = useRootStore();
   const stateAPIStatus = useLoadFoodData();
-  const menuList = useSelector(selectorMenu, shallowEqual);
-
-  useEffect(() => {
-    console.log('SERVER_EVENT: menu list changed');
-  }, [menuList]);
 
   function handleVegToggle() {
-    dispatch({
-      type: ACTIONS.CHANGE_DIET,
-    });
+    rootStore.changeDiet();
   }
 
   return (
@@ -30,8 +21,8 @@ export default function App() {
           <input
             type="checkbox"
             name="veg-checkbox"
-            value={diet}
-            checked={diet === 'veg'}
+            value={rootStore.diet}
+            checked={rootStore.diet === 'veg'}
             onChange={handleVegToggle}
           />
           Veg Only
@@ -41,47 +32,32 @@ export default function App() {
       {stateAPIStatus === 'success' && (
         <Fragment>
           <main>
-            <MenuList menuList={menuList} />
+            <MenuList />
           </main>
           <PaymentFooter />
         </Fragment>
       )}
     </div>
   );
-}
+});
 
 function useLoadFoodData() {
   const [stateAPIStatus, setAPIStatus] = useState('idle');
-  const dispatch = useDispatch();
+  const rootStore = useRootStore();
 
   useEffect(() => {
     setAPIStatus('loading');
     loadFoodData()
       .then((data) => {
-        dispatch({
-          type: ACTIONS.LOAD_MENU,
-          payload: {
-            menu: data,
-          },
-        });
+        rootStore.loadMenu(data);
         setAPIStatus('success');
       })
       .catch((error) => {
         setAPIStatus('error');
       });
-  }, [dispatch]);
+  }, [rootStore]);
 
   return stateAPIStatus;
 }
 
-function selectorMenu(state) {
-  const { diet, menuIdList, menuById } = state;
-  const menuId = menuIdList[diet];
-  const menuList = [];
-
-  menuId.forEach((id) => {
-    menuList.push(menuById[id]);
-  });
-
-  return menuList;
-}
+export default App;

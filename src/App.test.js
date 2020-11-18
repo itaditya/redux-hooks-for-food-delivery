@@ -1,10 +1,9 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { render, fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import App from './App';
-import { createReduxStore } from './redux';
+import { RootStore, RootStoreProvider } from './mobx';
 import * as utils from './utils';
 
 jest.mock('./utils');
@@ -26,11 +25,11 @@ const foodData = [
 ];
 
 describe('Test App', () => {
-  function renderApp(store = createReduxStore(), props = {}) {
+  function renderApp(store = new RootStore(), props = {}) {
     return render(
-      <Provider store={store}>
+      <RootStoreProvider value={store}>
         <App {...props} />
-      </Provider>,
+      </RootStoreProvider>,
     );
   }
 
