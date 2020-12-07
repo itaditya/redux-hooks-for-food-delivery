@@ -1,10 +1,9 @@
 import React from 'react';
-import { Provider } from 'react-redux';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 import { render, fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import App from './App';
-import { createReduxStore } from './redux';
 import * as utils from './utils';
 
 jest.mock('./utils');
@@ -26,11 +25,23 @@ const foodData = [
 ];
 
 describe('Test App', () => {
-  function renderApp(store = createReduxStore(), props = {}) {
+  function createQueryCache(queryConfig) {
+    const queryCache = new QueryCache({
+      defaultConfig: queryConfig || {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    return queryCache;
+  }
+
+  function renderApp(queryCache = createQueryCache(), props = {}) {
     return render(
-      <Provider store={store}>
+      <ReactQueryCacheProvider queryCache={queryCache}>
         <App {...props} />
-      </Provider>,
+      </ReactQueryCacheProvider>,
     );
   }
 

@@ -1,25 +1,18 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import React, { Fragment } from 'react';
 
-import { ACTIONS } from './redux';
+import { useDietStore } from './zustand';
 import { MenuList, Message, PaymentFooter } from './Comps';
-import { loadFoodData } from './utils';
+import { useLoadFoodQuery, useMenuList } from './hooks';
 
 export default function App() {
-  const diet = useSelector((state) => state.diet);
-  const dispatch = useDispatch();
+  const { diet, changeDiet } = useDietStore();
+  const menuQuery = useLoadFoodQuery();
+  const menuList = useMenuList();
 
-  const stateAPIStatus = useLoadFoodData();
-  const menuList = useSelector(selectorMenu, shallowEqual);
-
-  useEffect(() => {
-    console.log('SERVER_EVENT: menu list changed');
-  }, [menuList]);
+  const stateAPIStatus = menuQuery.status;
 
   function handleVegToggle() {
-    dispatch({
-      type: ACTIONS.CHANGE_DIET,
-    });
+    changeDiet();
   }
 
   return (
@@ -48,40 +41,4 @@ export default function App() {
       )}
     </div>
   );
-}
-
-function useLoadFoodData() {
-  const [stateAPIStatus, setAPIStatus] = useState('idle');
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setAPIStatus('loading');
-    loadFoodData()
-      .then((data) => {
-        dispatch({
-          type: ACTIONS.LOAD_MENU,
-          payload: {
-            menu: data,
-          },
-        });
-        setAPIStatus('success');
-      })
-      .catch((error) => {
-        setAPIStatus('error');
-      });
-  }, [dispatch]);
-
-  return stateAPIStatus;
-}
-
-function selectorMenu(state) {
-  const { diet, menuIdList, menuById } = state;
-  const menuId = menuIdList[diet];
-  const menuList = [];
-
-  menuId.forEach((id) => {
-    menuList.push(menuById[id]);
-  });
-
-  return menuList;
 }
