@@ -13,3 +13,19 @@ I have kept things simple for this toy app. All the relevant code for the post i
 6. utils.js - Random JS utilities like api fetching wrappers.
 
 The food app loads the menu list from a static `public/food-menu.json` file. In real apps data would be fetched from an API server.
+
+## How To Start
+
+### One Click Download & Run
+
+You can download and run the repo with one command to rule them all:
+
+`git clone https://github.com/itaditya/redux-hooks-for-food-delivery.git && cd redux-hooks-for-food-delivery && npm install && npm start`
+
+## How To Test
+
+`npm test`
+
+## Contributing
+
+Pull requests are welcome. File an issue for ideas, conversation or feedback.
